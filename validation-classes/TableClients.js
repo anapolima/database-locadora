@@ -1,15 +1,11 @@
-class TableEmployees
+class TableClients
 {
-    #office_id
     #first_name
     #last_name
     #phone_ddi
     #phone_ddd
     #phone_number
-    #city
-    #state
-    #address
-    #cpf
+    #document
     #username
     #password
 
@@ -21,51 +17,9 @@ class TableEmployees
         this.#phone_ddi = undefined;
         this.#phone_ddd = undefined;
         this.#phone_number = undefined;
-        this.#city = undefined;
-        this.#state = undefined;
-        this.#address = undefined;
-        this.#cpf = undefined;
+        this.#document = undefined;
         this.#username = undefined;
         this.#password = undefined;
-    }
-
-    OfficeId (_id)
-    {
-       return this.#verify_office_id(_id);
-    }
-
-    #verify_office_id = (_id) =>
-    {
-        const office_id = _id;
-
-        if (typeof (office_id) === "string")
-        {
-            const eIndex = office_id.toLowerCase().indexOf("e");
-
-            if (eIndex === -1)
-            {
-                const trimmed = office_id.trim();
-
-                if (!isNaN(Number(trimmed)) && Number(trimmed) !== 0 && Number(trimmed) > 0)
-                {
-                    this.#office_id = Number(trimmed);
-
-                    return this.#office_id;
-                }
-                else
-                {
-                    throw new Error(`The office id must be a number, positive and non-zero, for example "5"`);
-                }
-            }
-            else
-            {
-                throw new Error("The number string must not contain the letter E/e");
-            }
-        }
-        else
-        {
-            throw new Error("You should pass numbers as a string");
-        }
     }
 
     FirstName (_first_name)
@@ -231,181 +185,210 @@ class TableEmployees
         }
     }
 
-    City (_city)
+    Document(_cpf)
     {
-        return this.#verify_city(_city);
+        return this.#verify_document(_cpf);
     }
 
-    #verify_city = (_city) =>
+    #verify_document = (_document) =>
     {
-        const city = _city;
+        const document = _document.trim();
 
-        if ( typeof (city) === "string" && city.trim().length <= 80)
+        if (document.length == 14)
         {
-            const regex = /[a-zA-ZÀ-ü]{80}$/gm;
-            const regexSpecial = /[ˆ?><,`˜!@#$%ˆ&*()-_+=÷ºª•¶§∞¢£™¡‘“πøˆ¨¥†®´æ…¬k∆˙©ƒ∂ßå÷≥≤µ∫√≈Ω]/gm;
-
-            if (regex.test(city.trim()) && !regexSpecial.test(city.trim().toLowerCase()))
+            if (this.#verify_cpf(document))
             {
-                this.#city = city.trim().toUpperCase();
+                this.#document = document;
 
-                return this.#city;
+                return this.#document;
             }
             else
             {
-                throw new Error("The city name must be smaller than 80 characters and not contain special characters")
+               throw new Error("Invalid CPF");
             }
         }
-
-    }
-
-    State (_state)
-    {
-        return this.#verify_state(_state);
-    }
-
-    #verify_state = (_state) =>
-    {
-        const  state = _state;
-
-        if (typeof (state) === "string" && state.trim().length === 2)
+        else if (document.length == 18)
         {
-            const regex = /[a-zA-Z]{2}$/gm;
-
-            if (regex.test(state.trim()))
+            if (this.#verify_cnpj(document))
             {
-                this.#state = state.trim().toUpperCase();
+                this.#document = document;
 
-                return this.#state;
+                return this.#document;
             }
             else
             {
-                throw new Error("The state must be only letters!");
+                throw new Error("Invalid CNPJ");
             }
         }
         else
         {
-            throw new Error("The state must be a string with 2 characters");
+            throw new Error("The document must be a CPF (XXX.XXX.XXX-XX) or a CNPJ (XX.XXX.XXX/XXXX-XX)");
         }
+
     }
 
-    Address (_address)
+    #verify_cpf = (_document) =>
     {
-        return this.#verify_address(_address);
-    }
-
-    #verify_address = (_address) =>
-    {
-        const address = _address;
-
-        if ( typeof (address) === "string" && address.trim().length <= 150 && address.trim().length > 2)
+        const cpf = _document.trim();
+        const regex = /\d{3}\.\d{3}\.\d{3}-\d{2}$/;
+        
+        if (typeof cpf === "string" && regex.test(cpf))
         {
-            const regexSpecial = /[ˆ?><,`˜!@#$%ˆ&*()-_+=÷ºª•¶§∞¢£™¡‘“πøˆ¨¥†®´æ…¬k∆˙©ƒ∂ßå÷≥≤µ∫√≈Ω]/gm;
+            const validCpf = checkCPF(cpf);
+
+            function checkCPF (_cpfString)
+            {
+                const strCPF = _cpfString.replaceAll(".", "").replace("-", "").trim();
+    
+                let sum;
+                let rest;
+                sum = 0;   
+    
+                if (strCPF === "00000000000")
+                {
+                    return false;
+                };
             
-            if ( !regexSpecial.test(address.trim().toLowerCase()))
-            {
-                this.#address = address.trim().toUpperCase();
-
-                return this.#address;
-            }
-            else
-            {
-                throw new Error("The address must not contain special characters");
-            }
-        }
-        else
-        {
-            throw new Error("The address must contain at least 2 characters and be smaller than or equal to 150 characters");
-        }
-    }
-
-    Cpf(_cpf)
-    {
-        return this.#verify_cpf(_cpf);
-    }
-
-    #verify_cpf = (_cpf) =>
-    {
-        const cpf = _cpf;
-        
-        if (typeof cpf === "string" && cpf.trim().length === 14)
-        {
-            const regex = /\d{3}\.\d{3}\.\d{3}-\d{2}$/;
-
-            if (regex.test(cpf.trim()))
-            {
-                const validCpf = checkCPF(cpf);
-
-                function checkCPF (_cpfString)
+                for (let i = 1; i <= 9; i++)
                 {
-                    const strCPF = _cpfString.replaceAll(".", "").replace("-", "").trim();
-        
-                    let sum;
-                    let rest;
-                    sum = 0;   
-        
-                    if (strCPF === "00000000000")
-                    {
-                        return false;
-                    };
-                
-                    for (let i = 1; i <= 9; i++)
-                    {
-                        sum = sum + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
-                    };
-                
-                    rest = (sum * 10) % 11;
-                    if ((rest === 10) || (rest === 11)) 
-                    {
-                        rest = 0;
-                    };
-                
-                    if (rest !== parseInt(strCPF.substring(9, 10)))
-                    {
-                        return false;
-                    };
-                
-                    sum = 0;
-                    for (let i = 1; i <= 10; i++)
-                    {       
-                        sum = sum + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
-                    };
-                
-                    rest = (sum * 10) % 11;
-                    if ((rest === 10) || (rest === 11)) 
-                    {
-                        rest = 0;
-                    };
-                
-                    if (rest !== parseInt(strCPF.substring(10, 11)))
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    };
-                }
-
-                if (validCpf)
+                    sum = sum + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+                };
+            
+                rest = (sum * 10) % 11;
+                if ((rest === 10) || (rest === 11)) 
                 {
-                    this.#cpf = cpf.trim();
-
-                    return this.#cpf;
+                    rest = 0;
+                };
+            
+                if (rest !== parseInt(strCPF.substring(9, 10)))
+                {
+                    return false;
+                };
+            
+                sum = 0;
+                for (let i = 1; i <= 10; i++)
+                {       
+                    sum = sum + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+                };
+            
+                rest = (sum * 10) % 11;
+                if ((rest === 10) || (rest === 11)) 
+                {
+                    rest = 0;
+                };
+            
+                if (rest !== parseInt(strCPF.substring(10, 11)))
+                {
+                    return false;
                 }
                 else
                 {
-                    throw new Error("Invalid Cpf");
-                }
+                    return true;
+                };
+            }
+
+            if (validCpf)
+            {
+                this.#cpf = cpf;
+
+                return this.#cpf;
             }
             else
             {
-                throw new Error("The CPF must be on the format XXX.XXX.XXX-XX")
+                throw new Error("Invalid Cpf");
             }
         } 
         else
         {   
-            throw new Error("The CPF must be passed as a string with 14 characters");
+            return false;
+        }
+    }
+
+    #verify_cnpj = (_document) =>
+    {
+        const cnpj = _document.trim();
+        const regex = /^\d{2}\.\d{3}\.\d{3}\/000[1|2]-\d{2}$/;
+
+        if (typeof (cnpj) === "string" && regex.test(cnpj))
+        {
+            cnpj = cnpj.replace(/[^\d]+/g,'');
+        
+            if(cnpj === '')
+            {
+                return false;
+            }
+            
+            if (cnpj.length != 14)
+            {
+                return false;
+            }
+        
+            // Elimina CNPJs invalidos conhecidos
+            if (cnpj === "00000000000000" || 
+                cnpj === "11111111111111" || 
+                cnpj === "22222222222222" || 
+                cnpj === "33333333333333" || 
+                cnpj === "44444444444444" || 
+                cnpj === "55555555555555" || 
+                cnpj === "66666666666666" || 
+                cnpj === "77777777777777" || 
+                cnpj === "88888888888888" || 
+                cnpj === "99999999999999")
+            {
+                return false;
+            }
+                
+            // Valida DVs
+            let size = cnpj.length - 2
+            let numbers = cnpj.substring(0, size);
+            let digits = cnpj.substring(size);
+            let sum = 0;
+            let pos = size - 7;
+    
+            for (i = size; i >= 1; i--)
+            {
+                sum += numbers.charAt(size - i) * pos--;
+
+                if (pos < 2)
+                {
+                    pos = 9;
+                }
+            }
+    
+            result = sum % 11 < 2 ? 0 : 11 - sum % 11;
+    
+            if (result != digits.charAt(0))
+            {
+                return false;
+            }
+                
+            size = size + 1;
+            numbers = cnpj.substring(0,size);
+            sum = 0;
+            pos = size - 7;
+    
+            for (i = size; i >= 1; i--)
+            {
+                sum += numbers.charAt(size - i) * pos--;
+                
+                if (pos < 2)
+                {
+                    pos = 9;
+                }
+            }
+    
+            result = sum % 11 < 2 ? 0 : 11 - sum % 11;
+    
+            if (result != digits.charAt(1))
+            {
+                return false;
+            }
+                
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -469,6 +452,6 @@ class TableEmployees
     }
 }
 
-const EmployeesTable = new TableEmployees();
+const ClientsTable = new TableClients();
 
-export default EmployeesTable;
+export default ClientsTable;
