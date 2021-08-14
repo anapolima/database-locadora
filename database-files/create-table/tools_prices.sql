@@ -59,3 +59,15 @@ ALTER TABLE
             ("deleted_by")
         REFERENCES
             public.employees("id");
+
+ALTER TABLE public.tools_prices
+	ADD COLUMN
+		"up_to_amount_of_tools" integer CHECK (up_to_amount_of_tools > 0) NOT NULL DEFAULT 100;
+		
+ALTER TABLE public.tools_prices
+	ADD COLUMN
+		"beggining_term" date;
+		
+ALTER TABLE public.tools_prices
+	ADD COLUMN
+		"end_term" date CHECK (end_term >= beggining_term::date);
