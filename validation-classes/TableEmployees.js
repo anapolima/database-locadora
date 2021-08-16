@@ -242,10 +242,9 @@ class TableEmployees
 
         if ( typeof (city) === "string" && city.trim().length <= 80)
         {
-            const regex = /[a-zA-ZÀ-ü]{80}$/gm;
-            const regexSpecial = /[ˆ?><,`˜!@#$%ˆ&*()-_+=÷ºª•¶§∞¢£™¡‘“πøˆ¨¥†®´æ…¬k∆˙©ƒ∂ßå÷≥≤µ∫√≈Ω]/gm;
+            const regex = /[a-zA-ZÀ-ü]{3,80}$/gm;
 
-            if (regex.test(city.trim()) && !regexSpecial.test(city.trim().toLowerCase()))
+            if (regex.test(city.trim()))
             {
                 this.#city = city.trim().toUpperCase();
 
@@ -300,9 +299,9 @@ class TableEmployees
 
         if ( typeof (address) === "string" && address.trim().length <= 150 && address.trim().length > 2)
         {
-            const regexSpecial = /[ˆ?><,`˜!@#$%ˆ&*()-_+=÷ºª•¶§∞¢£™¡‘“πøˆ¨¥†®´æ…¬k∆˙©ƒ∂ßå÷≥≤µ∫√≈Ω]/gm;
+            const regexSpecial = /[a-zA-ZÀ-ü\d]{0,150}/gm;
             
-            if ( !regexSpecial.test(address.trim().toLowerCase()))
+            if (regexSpecial.test(address.trim().toLowerCase()))
             {
                 this.#address = address.trim().toUpperCase();
 
@@ -338,7 +337,7 @@ class TableEmployees
 
                 function checkCPF (_cpfString)
                 {
-                    const strCPF = _cpfString.replaceAll(".", "").replace("-", "").trim();
+                    const strCPF = _cpfString.replace(/[^\d]+/g, "").trim();
         
                     let sum;
                     let rest;

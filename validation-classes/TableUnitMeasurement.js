@@ -16,7 +16,7 @@ class TableUnitMeasurement
     {
         const period = _period;
 
-        if (typeof (period) === "string" && period.trim().lengh <= 9 && period.trim().length >= 3)
+        if (typeof (period) === "string" && period.trim().length <= 9 && period.trim().length >= 3)
         {
             this.#period = period.toUpperCase().trim();
 

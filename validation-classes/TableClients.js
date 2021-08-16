@@ -11,7 +11,6 @@ class TableClients
 
     constructor ()
     {
-        this.#office_id = undefined;
         this.#first_name = undefined;
         this.#last_name = undefined;
         this.#phone_ddi = undefined;
@@ -238,8 +237,8 @@ class TableClients
 
             function checkCPF (_cpfString)
             {
-                const strCPF = _cpfString.replaceAll(".", "").replace("-", "").trim();
-    
+                const strCPF = _cpfString.trim().replace(/[^\d]+/g,'');
+
                 let sum;
                 let rest;
                 sum = 0;   
@@ -289,9 +288,7 @@ class TableClients
 
             if (validCpf)
             {
-                this.#cpf = cpf;
-
-                return this.#cpf;
+                return true;
             }
             else
             {

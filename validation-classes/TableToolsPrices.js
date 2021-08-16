@@ -190,13 +190,17 @@ class TableToolsPrices
         {
             const regex = /[\d]{1,3},[\d]{2}$/;
 
-            if (regex.test(price))
+            if (regex.test(price) && Number(price.replace(",", ".") > 0))
             {
                 const numericPrice = Number(price.replace(",", "."));
 
                 this.#price = numericPrice;
 
                 return this.#price
+            }
+            else
+            {
+                throw new Error("The price must be in the format XX,XX and be bigger than 0");
             }
 
         }
@@ -265,7 +269,7 @@ class TableToolsPrices
 
                 const formatedDate = `${year}-${month}-${day}`;
 
-                if (new Date(formatedDate) - new Date(this.#beggining_term) > 0)
+                if (new Date(formatedDate) - new Date(this.#beggining_term) >= 0)
                 {
                     this.#end_of_term = formatedDate;
 
