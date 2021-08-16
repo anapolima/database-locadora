@@ -47,3 +47,18 @@ public.clients
         REFERENCES
             public.employees("id");
 
+ALTER TABLE
+	public.clients
+	ADD COLUMN
+		"inactivated_at" timestamp with time zone,
+	ADD COLUMN
+	 	"inactivated_by" integer;
+	
+ALTER TABLE
+	public.clients
+	ADD CONSTRAINT
+		"CLIENTS_fk3"
+		FOREIGN KEY
+			("inactivated_by")
+		REFERENCES
+			public.employees("id");

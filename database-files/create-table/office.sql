@@ -40,5 +40,20 @@ ALTER TABLE
         FOREIGN KEY
             ("deleted_by")
         REFERENCES
-            public.employees("id");
-            
+            public.employees("id");     
+
+ALTER TABLE
+	public.office
+	ADD COLUMN
+		"inactivated_at" timestamp with time zone,
+	ADD COLUMN
+	 	"inactivated_by" integer;
+	
+ALTER TABLE
+	public.office
+	ADD CONSTRAINT
+		"OFFICE_fk3"
+		FOREIGN KEY
+			("inactivated_by")
+		REFERENCES
+			public.employees("id");

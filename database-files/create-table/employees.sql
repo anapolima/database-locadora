@@ -58,4 +58,19 @@ ALTER TABLE
             ("deleted_by")
         REFERENCES
             public.employees("id");
-                 
+                
+ALTER TABLE
+	public.employees
+	ADD COLUMN
+		"inactivated_at" timestamp with time zone,
+	ADD COLUMN
+	 	"inactivated_by" integer;
+	
+ALTER TABLE
+	public.employees
+	ADD CONSTRAINT
+		"EMPLOYEES_fk4"
+		FOREIGN KEY
+			("inactivated_by")
+		REFERENCES
+			public.employees("id");
