@@ -208,10 +208,10 @@ class QueryGenerator
                 .then( (result) =>
                 {
                     console.log(result.rows);
-                    this.#result = result.rows;
+                    this.#result.data = result.rows;
                     return this.#result;
                 })
-                .catch( (err) => console.log(err.message))
+                .catch( (err) => this.#result.transaction = err.message)
                 .finally( () =>
                 {
                     this.#client.end();
