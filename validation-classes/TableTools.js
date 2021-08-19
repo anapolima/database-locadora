@@ -4,13 +4,54 @@ class TableTools
     #tool_description
     #tool_quantity
     #tool_group_id
+    #id
     
     constructor ()
     {
+        this.#id = undefined;
         this.#tool_name = undefined;
         this.#tool_description = undefined;
         this.#tool_quantity = undefined;
         this.#tool_group_id = undefined;
+    }
+
+    Id (_id)
+    {
+        return this.#verify_id(_id);
+    }
+
+    #verify_id = (_id) =>
+    {
+        const id = _id;
+
+        if (typeof (id) === "string")
+        {
+            const eIndex = id.toLowerCase().indexOf("e");
+
+            if (eIndex === -1)
+            {
+                const trimmed = id.trim();
+
+                if (!isNaN(Number(trimmed)) && Number(trimmed) > 0)
+                {
+                    this.#id = Number(trimmed);
+
+                    return this.#id;
+                }
+                else
+                {
+                    throw new Error(`The id must be a number, positive and non-zero, for example "5"`);
+                }
+            }
+            else
+            {
+                throw new Error("The number string must not contain the letter E/e");
+            }
+        }
+        else
+        {
+            throw new Error("You should pass numbers as a string");
+        }
     }
 
     Name (_name)
