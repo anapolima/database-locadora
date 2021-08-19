@@ -1,0 +1,111 @@
+###
+POST http://localhost:8080/clients HTTP/1.1
+Content-Type: application/json
+
+{
+    "firstName": "Ana Paula",
+    "lastName": "Oliveira de Lima",
+    "phoneDdi": "+55",
+    "phoneDdd": "14",
+    "phoneNumber": "998443453",
+    "document": "454.427.838-46",
+    "username": "anapolima",
+    "password": "12345678"
+}
+
+###
+POST http://localhost:8080/employees HTTP/1.1
+Content-Type: application/json
+
+{
+    "firstName": "Patricia Elis",
+    "lastName": "Oliveira de Lima",
+    "phoneDdi": "+55",
+    "phoneDdd": "14",
+    "phoneNumber": "997893506",
+    "cpf": "470.346.208-73",
+    "city": "fartura",
+    "state": "SP",
+    "address": "Irmã Eurozia, 105",
+    "username": "patriciaElis",
+    "password": "12345678",
+    "officeId": "1"
+}
+
+###
+POST http://localhost:8080/tools-groups HTTP/1.1
+Content-Type: application/json
+
+{
+    "groupName": "compactador de solo",
+    "description": "amassa a terra"
+}
+
+###
+POST http://localhost:8080/tools HTTP/1.1
+Content-Type: application/json
+
+{
+    "toolName": "Compactador de solo",
+    "toolQuantity": "6",
+    "toolGroupId": "2",
+    "prices": {
+        "toolId": "1",
+        "unit": "1",
+        "unitMeasurementId": "1",
+        "upToAmountOfTools": "3",
+        "begginingTerm": "23/07/2021",
+        "endTerm": "23/07/2021",
+        "price": "34,00"
+    }
+}
+
+###
+POST http://localhost:8080/unit-measurement HTTP/1.1
+Content-Type: application/json
+
+{
+    "period": "Hora(s)"
+}
+
+###
+POST http://localhost:8080/tools-prices HTTP/1.1
+Content-Type: application/json
+
+{
+    "toolId": "1",
+    "unit": "1",
+    "unitMeasurementId": "1",
+    "upToAmountOfTools": "3",
+    "begginingTerm": "23/07/2021",
+    "endTerm": "23/07/2021",
+    "price": "34,00"
+}
+
+###
+POST http://localhost:8080/office HTTP/1.1
+Content-Type: application/json
+
+{
+    "officeName": "office",
+    "officeSalary": "1200,00",
+    "officeDescription": "description"
+}
+
+###
+GET http://localhost:3000/get-categories/user/2
+
+###
+PUT http://localhost:3000/update-user HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": 3,
+    "name":"Ermerson",
+    "email":"fulano@teste.com",
+    "phone": "99 99999 9999",
+    "password":"123"
+}
+
+###
+DELETE http://localhost:3000/delete-user/1
