@@ -80,7 +80,6 @@ class QueryGenerator
                 .then( () => this.#client.query(`INSERT INTO ${table} (${this.#columns}) VALUES (${this.#params}) ${returning ? `RETURNING ${this.#returning}` : ""}`, values))
                 .then( async (result) =>
                 {
-                    console.log(result.rows) 
                     this.#result.data = result.rows;
 
                     await this.#client.query("COMMIT")
@@ -90,7 +89,6 @@ class QueryGenerator
                 })
                 .catch( async (err) =>
                 {
-                    console.log(err.message);
                     this.#result.error.transaction = err.message;
 
                     await this.#client.query("ROLLBACK")
@@ -341,7 +339,6 @@ class QueryGenerator
                 })
                 .catch( async (err) =>
                 {
-                    console.log(err.message)
                     this.#result.error.transaction = err.message;
 
                     await this.#client.query("ROLLBACK;")
@@ -368,47 +365,7 @@ class QueryGenerator
             return this.#result;
         }
     }
-
-    Delete (_table, _id)
-    {
-        this.#result = "";
-        const table = _table;
-        const id = _id;
-
-        const client = new pg.Client({
-            host: "localhost",
-            port: 5434,
-            database: "test",
-            user: "postgres",
-            password: "anapolimadev"
-        });
-        
-        client.connect()
-            .then( () => console.log("CONNECTED TO TEST!"))
-            .then( () => console.log(`DELETE FROM ${table} WHERE id = ${_id} ${returning ? `RETURNING ${this.#returning}` : ""}`))
-            .then( () => client.query(`UPDATE ${table} SET ${this.#params} ${whereColumns ? `WHERE ${this.#whereParams}` : ";"} ${returning ? `RETURNING ${this.#returning}` : ""}`, values))
-            .then( (result) =>
-            {
-                this.#result = result.rows;
-            })
-            .catch( (err) => console.log(err.message))
-            .finally( () =>
-            {
-                client.end();
-                this.#whereColumns = "";
-                this.#whereParams = "";
-                this.#columns = "";
-                this.#params = "";
-                this.#returning = "";
-            });        
-    }
 }
 
 const Query = new QueryGenerator();
 export default Query;
-// Query.Insert("users", {"name": "JSON"}, ["id", "name"]);
-// Query.Select("users", ["last_name", "id ="], ["is null", "2"], ["AND"]);
-// Query.Select("users", ["*"], {"name": {operator: "like", value: "ana"}}, [""], ["id"]);
-// Select(_table, _columns, _whereColumnsValues, _logicalOperators, _orderBy)
-// Query.Select("users", ["name", "last_name"],["id ="], ["2"], [""]);
-// Query.Update("users", {"last_name": "FLOR"}, ["*"], {"id": {operator: "between", value: [21,24]}}, [""]);
