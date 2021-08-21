@@ -1,0 +1,23 @@
+###
+GET http://localhost:8080/clients HTTP/1.1
+
+###
+GET http://localhost:8080/employees HTTP/1.1
+
+###
+GET http://localhost:8080/tools-groups HTTP/1.1
+
+###
+GET http://localhost:8080/tools HTTP/1.1
+
+###
+GET http://localhost:8080/unit-measurement HTTP/1.1
+
+###
+GET http://localhost:8080/tools-prices HTTP/1.1
+
+###
+GET http://localhost:8080/office HTTP/1.1
+
+###
+GET http://localhost:8080/logoff HTTP/1.1

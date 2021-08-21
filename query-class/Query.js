@@ -133,7 +133,6 @@ class QueryGenerator
         if (Array.isArray(columns))
         {
             this.#columns = columns.join(", ");
-            console.log(this.#columns);
 
             let param = 1;
 
@@ -149,7 +148,6 @@ class QueryGenerator
                     {
                         const regex = /=$|!=$|>$|>=$|<$|<=$|between$|not between$|like$|is$|is not$|not like$/i;
 
-                        console.log(_column);
                         const operator = whereColumnsValues[_column].operator;
                         const isValidOperator = regex.test(operator)
 
@@ -157,7 +155,7 @@ class QueryGenerator
                         { 
                             if (operator.toLowerCase() === "like" || operator.toLowerCase() === "not like")
                             {
-                                whereParams.push(`${_column} ${operator.toUpperCase()} '%'||$${param}||'%' `);
+                                whereParams.push(`${_column} ${operator.toUpperCase()} '%'||$${param}||'%' ` + (logicalOperators[_index] ? logicalOperators[_index] : ""));
                                 values.push(whereColumnsValues[_column].value);
                                 param ++;
                             }
@@ -198,16 +196,14 @@ class QueryGenerator
                     this.#orderBy = orderBy.join(", ");
                 }
             }
-            console.log(values);
             
             const result = this.#client.connect()
                 .then( () => console.log("CONNECTED TO TEST!"))
                 .then( () => console.log(`SELECT ${this.#columns} FROM ${table} WHERE ${this.#whereParams}`))
                 .then( () => console.log(`SELECT ${this.#columns} FROM ${table} ${ whereColumns ? `WHERE ${this.#whereParams}` : ""}${orderBy ? `ORDER BY ${this.#orderBy}` : ""}`))
-                .then( () => this.#client.query(`SELECT ${this.#columns} FROM ${table} ${ whereColumns.length > 0 ? `WHERE ${this.#whereParams}` : ";"} ${orderBy ? `ORDER BY ${this.#orderBy}` : ""}`, values))
+                .then( () => this.#client.query(`SELECT ${this.#columns} FROM ${table} ${ whereColumns.length !== 0 ? `WHERE ${this.#whereParams}` : ""} ${orderBy ? `ORDER BY ${this.#orderBy}` : ""}`, values))
                 .then( (result) =>
                 {
-                    console.log(result.rows);
                     this.#result.data = result.rows;
                     return this.#result;
                 })
@@ -218,6 +214,9 @@ class QueryGenerator
                     this.#columns = "";
                     this.#params = "";
                     this.#returning = "";
+                    this.#whereParams = "";
+                    this.#whereColumns = "";
+                    this.#orderBy = "";
                 });
             
             return result;
@@ -284,7 +283,6 @@ class QueryGenerator
                     {
                         const regex = /=$|!=$|>$|>=$|<$|<=$|between$|not between$|like$|is$|is not$|not like$/i;
 
-                        console.log(_column);
                         const operator = whereColumnsValues[_column].operator;
                         const isValidOperator = regex.test(operator)
 
@@ -322,11 +320,10 @@ class QueryGenerator
                         }
 
                     });
+
                     this.#whereParams = whereParams.join(" ");
                 }
             }
-
-            console.log(values);
 
             const result = this.#client.connect()
                 .then( () => console.log("CONNECTED TO TEST!"))
@@ -360,7 +357,6 @@ class QueryGenerator
                     this.#columns = "";
                     this.#params = "";
                     this.#returning = "";
-                    console.log(this.#result);
                     this.#client.end();
                 });
             
@@ -393,7 +389,6 @@ class QueryGenerator
             .then( () => client.query(`UPDATE ${table} SET ${this.#params} ${whereColumns ? `WHERE ${this.#whereParams}` : ";"} ${returning ? `RETURNING ${this.#returning}` : ""}`, values))
             .then( (result) =>
             {
-                console.log(result.rows);
                 this.#result = result.rows;
             })
             .catch( (err) => console.log(err.message))

@@ -1,19 +1,61 @@
 ###
+# Required fields LOGIN:
+#      username,
+#      password
+# Optional fields:
+#      --none
+POST http://localhost:8080/login/employees HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "mariaflor",
+    "password": "mariaflor"
+}
+
+###
+
+
+# Required fields CLIENTS:
+#      firstName,
+#      lastName,
+#      phoneDdi,
+#      phoneDdd,
+#      phoneNumber,
+#      username,
+#      password
+# Optional fields:
+#       document
 POST http://localhost:8080/clients HTTP/1.1
 Content-Type: application/json
 
 {
-    "firstName": "Ana Paula",
-    "lastName": "Oliveira de Lima",
+    "firstName": "Cliente",
+    "lastName": "Teste",
     "phoneDdi": "+55",
     "phoneDdd": "14",
     "phoneNumber": "998443453",
-    "document": "454.427.838-46",
-    "username": "anapolima",
+    "username": "anapolima2",
     "password": "12345678"
 }
 
 ###
+
+
+# Required fields EMPLOYEES:
+#      firstName,
+#      lastName,
+#      phoneDdi,
+#      phoneDdd,
+#      phoneNumber,
+#      username,
+#      password,
+#      cpf,
+#      city,
+#      state,
+#      address,
+#      officeId
+# Optional fields:
+#       --none
 POST http://localhost:8080/employees HTTP/1.1
 Content-Type: application/json
 
@@ -23,7 +65,7 @@ Content-Type: application/json
     "phoneDdi": "+55",
     "phoneDdd": "14",
     "phoneNumber": "997893506",
-    "cpf": "470.346.208-73",
+    "cpf": "111.111.111-11",
     "city": "fartura",
     "state": "SP",
     "address": "Irmã Eurozia, 105",
@@ -33,6 +75,12 @@ Content-Type: application/json
 }
 
 ###
+
+
+# Required fields TOOLS GROUPS:
+#      groupName
+# Optional fields:
+#       description
 POST http://localhost:8080/tools-groups HTTP/1.1
 Content-Type: application/json
 
@@ -42,6 +90,23 @@ Content-Type: application/json
 }
 
 ###
+
+
+# Required fields TOOLS:
+#      toolName,
+#      toolQuantity,
+#      toolGroupId,
+# Optional fields:
+#       toolDescription,
+#       prices {
+#          Required fields:
+#              unit,
+#              unitMeasurementId,
+#              upToAmountOfTools,
+#              begginingTerm,
+#              endTerm,
+#              price
+#      }
 POST http://localhost:8080/tools HTTP/1.1
 Content-Type: application/json
 
@@ -61,14 +126,32 @@ Content-Type: application/json
 }
 
 ###
+
+
+# Required fields UNIT MEASUREMENT:
+#      period
+# Optional fields:
+#      --none
 POST http://localhost:8080/unit-measurement HTTP/1.1
 Content-Type: application/json
 
 {
-    "period": "Hora(s)"
+    "period": "tempo(s)"
 }
 
 ###
+
+
+# Required fields TOOLS PRICES:
+#      toolId,
+#      unit,
+#      unitMeasurementId,
+#      upToAmountOfTools,
+#      begginingTerm,
+#      endTerm,
+#      price
+# Optional fields:
+#      --none
 POST http://localhost:8080/tools-prices HTTP/1.1
 Content-Type: application/json
 
@@ -83,6 +166,13 @@ Content-Type: application/json
 }
 
 ###
+
+
+# Required fields OFFICE:
+#      officeName,
+#      officeSalary
+# Optional fields:
+#      officeDescription
 POST http://localhost:8080/office HTTP/1.1
 Content-Type: application/json
 
@@ -93,19 +183,3 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/get-categories/user/2
-
-###
-PUT http://localhost:3000/update-user HTTP/1.1
-Content-Type: application/json
-
-{
-    "id": 3,
-    "name":"Ermerson",
-    "email":"fulano@teste.com",
-    "phone": "99 99999 9999",
-    "password":"123"
-}
-
-###
-DELETE http://localhost:3000/delete-user/1

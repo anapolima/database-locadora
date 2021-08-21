@@ -1,0 +1,139 @@
+###
+# Required fields CLIENTS:
+#      clientId;
+# Optional fields:
+#      firstName,
+#      lastName,
+#      phoneDdi,
+#      phoneDdd,
+#      phoneNumber,
+#      username,
+#      password
+#      document
+PUT http://localhost:8080/clients HTTP/1.1
+Content-Type: application/json
+
+{
+    "clientId": "9",
+    "phoneDdd":"43"
+}
+
+###
+
+
+# Required fields EMPLOYEES:
+#      employeeId
+# Optional fields:
+#      firstName,
+#      lastName,
+#      phoneDdi,
+#      phoneDdd,
+#      phoneNumber,
+#      username,
+#      password,
+#      cpf,
+#      city,
+#      state,
+#      address,
+#      officeId
+PUT http://localhost:8080/employees HTTP/1.1
+Content-Type: application/json
+
+{
+    "employeeId": "5",
+    "phoneDdd":"43"
+}
+
+###
+
+
+# Required fields TOOLS GROUPS:
+#      groupId
+# Optional fields:
+#      groupName,
+#      description
+PUT http://localhost:8080/tools-groups HTTP/1.1
+Content-Type: application/json
+
+{
+    "groupId": "2",
+    "groupName": "43"
+}
+
+###
+
+
+# Required fields TOOLS:
+#      toolId
+# Optional fields:
+#      toolDescription,
+#      toolName,
+#      toolQuantity,
+#      toolGroupId
+PUT http://localhost:8080/tools HTTP/1.1
+Content-Type: application/json
+
+{
+    "toolId": "9",
+    "toolQuantity": "4"
+}
+
+###
+
+
+# Required fields UNIT MEASUREMENT:
+#      id
+# Optional fields:
+#      period
+PUT http://localhost:8080/unit-measurement HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "9",
+    "period":"43"
+}
+
+###
+
+
+# Required fields TOOLS PRICES:
+#      id
+# Optional fields:
+#      toolId,
+#      unit,
+#      unitMeasurementId,
+#      upToAmountOfTools,
+#      begginingTerm,
+#      endTerm,
+#      price
+PUT http://localhost:8080/tools-prices HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "9",
+    "toolId": "1",
+    "unit": "1",
+    "unitMeasurementId": "1",
+    "upToAmountOfTools": "3",
+    "begginingTerm": "23/07/2021",
+    "endTerm": "23/07/2021",
+    "price": "34,00"
+}
+
+###
+
+
+# Required fields OFFICE:
+#      officeId
+# Optional fields:
+#      officeName,
+#      officeSalary,
+#      officeDescription
+PUT http://localhost:8080/office HTTP/1.1
+Content-Type: application/json
+
+{
+    "officeId": "3",
+    "officeName": "office update"
+    
+}
