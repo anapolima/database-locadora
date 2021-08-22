@@ -74,8 +74,6 @@ class QueryGenerator
             }
             
             const result = this.#client.connect()
-                .then( () => console.log("CONNECTED TO TEST!"))
-                // .then( () => console.log(`BEGIN TRANSACTION INTOINSERT INTO ${table} (${this.#columns}) VALUES (${this.#params}) ${returning ? `RETURNING ${this.#returning}` : ""}`))
                 .then( () => this.#client.query("BEGIN;"))
                 .then( () => this.#client.query(`INSERT INTO ${table} (${this.#columns}) VALUES (${this.#params}) ${returning ? `RETURNING ${this.#returning}` : ""}`, values))
                 .then( async (result) =>
@@ -102,6 +100,9 @@ class QueryGenerator
                     this.#columns = "";
                     this.#params = "";
                     this.#returning = "";
+                    this.#whereParams = "";
+                    this.#whereColumns = "";
+                    this.#orderBy = "";
                 });
             
             return result;
@@ -121,11 +122,9 @@ class QueryGenerator
         const table = _table;
         const columns = _columns;
         const whereColumnsValues = _whereColumnsValues;
-        // const whereValues = _values;
         const logicalOperators = _logicalOperators;
         const whereColumns = [];
         const values = [];
-        const isNullIndexes = [];
         const orderBy = _orderBy;
 
         if (Array.isArray(columns))
@@ -196,9 +195,6 @@ class QueryGenerator
             }
             
             const result = this.#client.connect()
-                .then( () => console.log("CONNECTED TO TEST!"))
-                .then( () => console.log(`SELECT ${this.#columns} FROM ${table} WHERE ${this.#whereParams}`))
-                .then( () => console.log(`SELECT ${this.#columns} FROM ${table} ${ whereColumns ? `WHERE ${this.#whereParams}` : ""}${orderBy ? `ORDER BY ${this.#orderBy}` : ""}`))
                 .then( () => this.#client.query(`SELECT ${this.#columns} FROM ${table} ${ whereColumns.length !== 0 ? `WHERE ${this.#whereParams}` : ""} ${orderBy ? `ORDER BY ${this.#orderBy}` : ""}`, values))
                 .then( (result) =>
                 {
@@ -324,8 +320,6 @@ class QueryGenerator
             }
 
             const result = this.#client.connect()
-                .then( () => console.log("CONNECTED TO TEST!"))
-                .then( () => console.log(`UPDATE ${table} SET ${this.#params} ${whereColumns ? `WHERE ${this.#whereParams}` : ""} ${returning ? `RETURNING ${this.#returning}` : ""}`))
                 .then( () => this.#client.query("BEGIN;"))
                 .then( () => this.#client.query(`UPDATE ${table} SET ${this.#params} ${whereColumns ? `WHERE ${this.#whereParams}` : ""} ${returning ? `RETURNING ${this.#returning}` : ""}`, values))
                 .then( async (result) =>
@@ -349,12 +343,13 @@ class QueryGenerator
                 })
                 .finally( () =>
                 {
-                    this.#whereColumns = "";
-                    this.#whereParams = "";
+                    this.#client.end();
                     this.#columns = "";
                     this.#params = "";
                     this.#returning = "";
-                    this.#client.end();
+                    this.#whereParams = "";
+                    this.#whereColumns = "";
+                    this.#orderBy = "";
                 });
             
             return result;

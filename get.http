@@ -20,4 +20,12 @@ GET http://localhost:8080/tools-prices HTTP/1.1
 GET http://localhost:8080/office HTTP/1.1
 
 ###
+GET http://localhost:8080/tools-managment HTTP/1.1
+
+###
 GET http://localhost:8080/logoff HTTP/1.1
+
+###
+# This is the only route that doesn't need an active session so you can check
+# if the latest activities and logout are being updated correctly.
+GET http://localhost:8080/sessions HTTP/1.1

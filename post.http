@@ -60,18 +60,18 @@ POST http://localhost:8080/employees HTTP/1.1
 Content-Type: application/json
 
 {
-    "firstName": "Patricia Elis",
-    "lastName": "Oliveira de Lima",
+    "firstName": "funcionario",
+    "lastName": "teste 2",
     "phoneDdi": "+55",
     "phoneDdd": "14",
     "phoneNumber": "997893506",
-    "cpf": "111.111.111-11",
+    "cpf": "333.333.333-33",
     "city": "fartura",
     "state": "SP",
     "address": "Irmã Eurozia, 105",
-    "username": "patriciaElis",
+    "username": "funcionarioteste2",
     "password": "12345678",
-    "officeId": "1"
+    "officeId": "4"
 }
 
 ###
@@ -85,8 +85,8 @@ POST http://localhost:8080/tools-groups HTTP/1.1
 Content-Type: application/json
 
 {
-    "groupName": "compactador de solo",
-    "description": "amassa a terra"
+    "groupName": "grupo 2",
+    "description": "grupo de teste"
 }
 
 ###
@@ -111,16 +111,15 @@ POST http://localhost:8080/tools HTTP/1.1
 Content-Type: application/json
 
 {
-    "toolName": "Compactador de solo",
+    "toolName": "ferramenta teste 9",
     "toolQuantity": "6",
-    "toolGroupId": "2",
+    "toolGroupId": "4",
     "prices": {
-        "toolId": "1",
         "unit": "1",
-        "unitMeasurementId": "1",
+        "unitMeasurementId": "6",
         "upToAmountOfTools": "3",
-        "begginingTerm": "23/07/2021",
-        "endTerm": "23/07/2021",
+        "begginingTerm": "23/12/2021",
+        "endTerm": "23/12/2021",
         "price": "34,00"
     }
 }
@@ -136,7 +135,7 @@ POST http://localhost:8080/unit-measurement HTTP/1.1
 Content-Type: application/json
 
 {
-    "period": "tempo(s)"
+    "period": "unit 2"
 }
 
 ###
@@ -156,13 +155,13 @@ POST http://localhost:8080/tools-prices HTTP/1.1
 Content-Type: application/json
 
 {
-    "toolId": "1",
+    "toolId": "10",
     "unit": "1",
     "unitMeasurementId": "1",
     "upToAmountOfTools": "3",
-    "begginingTerm": "23/07/2021",
-    "endTerm": "23/07/2021",
-    "price": "34,00"
+    "begginingTerm": "23/11/2021",
+    "endTerm": "23/11/2021",
+    "price": "74,00"
 }
 
 ###
@@ -177,7 +176,7 @@ POST http://localhost:8080/office HTTP/1.1
 Content-Type: application/json
 
 {
-    "officeName": "office",
+    "officeName": "office test",
     "officeSalary": "1200,00",
     "officeDescription": "description"
 }

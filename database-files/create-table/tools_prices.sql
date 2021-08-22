@@ -71,3 +71,19 @@ ALTER TABLE public.tools_prices
 ALTER TABLE public.tools_prices
 	ADD COLUMN
 		"end_term" date CHECK (end_term >= beggining_term::date);
+
+ALTER TABLE
+	public.tools_prices
+	ADD COLUMN
+		"inactivated_at" timestamp with time zone,
+	ADD COLUMN
+	 	"inactivated_by" integer;
+	
+ALTER TABLE
+	public.tools_prices
+	ADD CONSTRAINT
+		"TOOLS_PRICES_fk5"
+		FOREIGN KEY
+			("inactivated_by")
+		REFERENCES
+			public.employees("id");

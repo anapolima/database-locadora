@@ -2,7 +2,6 @@ import express from "express";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 import cookieParser from "cookie-parser";
-import pg from "pg";
 
 import ClientsTable from "./validation-classes/TableClients.js";
 import EmployeesTable from "./validation-classes/TableEmployees.js";
@@ -47,10 +46,10 @@ app.post("/login/employees", async (req, res) =>
     const logicalOperators = ["AND", "AND"]
     
     const result = await Query.Select("public.employees", selectColumns, whereParams, logicalOperators);
-    console.log(result);
-
+    
     if (result.data.length !== 0 && !result.error.transaction)
     {
+        console.log(result);
         const userData = result.data[0];
         const storedPassword = userData.password;
         const correctedPassword = await bcrypt.compare(password, storedPassword);
@@ -251,7 +250,7 @@ app.post("/clients", async (req, res) =>
                     !inserting.error.commit && !inserting.error.rollback)
                 {
                     console.log(inserting);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -465,7 +464,7 @@ app.post("/employees", async (req, res) =>
                     !inserting.error.commit && !inserting.error.rollback)
                 {
                     console.log(inserting);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -558,7 +557,7 @@ app.post("/tools-groups", async (req, res) =>
                     !inserting.error.commit && !inserting.error.rollback)
                 {
                     console.log(inserting);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -753,7 +752,7 @@ app.post("/tools", async (req, res) =>
                         }
                     }
                 });
-                console.table(fieldsValuesPrices)
+                console.log(fieldsValuesPrices)
             }
 
             if (Object.keys(validationError).length !== 0 && Object.keys(validationErrorPrices).length !== 0)
@@ -771,46 +770,49 @@ app.post("/tools", async (req, res) =>
                     !insertingTool.error.commits && !insertingTool.error.rollback)
                 {
                     console.log(insertingTool);
-                    updateSessionActivity(validSession);
-
+                    await updateSessionActivity(validSession);
                     const toolId = insertingTool.data[0].id;
-                    fieldsValuesPrices["tool_id"] = toolId;
-                    fieldsValuesPrices["created_by"] = validSession.data[0].user_id;
-                    fieldsValuesPrices["created_at"] = "now()";
-    
-                    const insertingPrice = await Query.Insert("public.tools_prices", fieldsValuesPrices, ["*"]);
 
-                    if (!insertingPrice.error.transaction && !insertingPrice.error.params &&
-                        !insertingPrice.error.commit && !insertingPrice.error.rollback)
+                    if (req.body.prices)
                     {
-                        updateSessionActivity(validSession);
-                        console.log(insertingPrice);
-
-                        fieldsValuesManagment["tool_id"] = insertingTool.data[0].id;
-                        fieldsValuesManagment["available"] = insertingTool.data[0].quantity;
-                        fieldsValuesManagment["total"] = insertingTool.data[0].quantity;
-                        fieldsValuesManagment["rented"] = 0;
-                        fieldsValuesManagment["updated_at"] = "now()";
-                        fieldsValuesManagment["updated_by"] = validSession.data[0].user_id;
+                        fieldsValuesPrices["tool_id"] = toolId;
+                        fieldsValuesPrices["created_by"] = validSession.data[0].user_id;
+                        fieldsValuesPrices["created_at"] = "now()";
+        
+                        const insertingPrice = await Query.Insert("public.tools_prices", fieldsValuesPrices, ["*"]);
     
-                        const insertingManagment = await Query.Insert("public.tools_managment", fieldsValuesManagment, ["*"]);
-
-                        if (!insertingManagment.error.transaction && !insertingManagment.error.params &&
-                            !insertingManagment.error.commit && !insertingManagment.error.rollback)
+                        if (!insertingPrice.error.transaction && !insertingPrice.error.params &&
+                            !insertingPrice.error.commit && !insertingPrice.error.rollback)
                         {
-                            updateSessionActivity(validSession);
-                            console.log(insertingManagment);
-                            res.end();
+                            await updateSessionActivity(validSession);
+                            console.log(insertingPrice);
                         }
                         else
                         {
-                            console.log("An error occurred while inserting tool managment", insertingManagment.error);
+                            console.log("An error occurred while inserting tools prices", insertingPrice.error);
                             res.end();
                         }
                     }
+
+                    fieldsValuesManagment["tool_id"] = toolId;
+                    fieldsValuesManagment["available"] = insertingTool.data[0].quantity;
+                    fieldsValuesManagment["total"] = insertingTool.data[0].quantity;
+                    fieldsValuesManagment["rented"] = 0;
+                    fieldsValuesManagment["updated_at"] = "now()";
+                    fieldsValuesManagment["updated_by"] = validSession.data[0].user_id;
+
+                    const insertingManagment = await Query.Insert("public.tools_managment", fieldsValuesManagment, ["*"]);
+
+                    if (!insertingManagment.error.transaction && !insertingManagment.error.params &&
+                        !insertingManagment.error.commit && !insertingManagment.error.rollback)
+                    {
+                        await updateSessionActivity(validSession);
+                        console.log(insertingManagment);
+                        res.end();
+                    }
                     else
                     {
-                        console.log("An error occurred while inserting tool prices", insertingPrice.error);
+                        console.log("An error occurred while inserting tool managment", insertingManagment.error);
                         res.end();
                     }
                 }
@@ -890,7 +892,7 @@ app.post("/unit-measurement", async (req, res) =>
                     !inserting.error.commit && !inserting.error.rollback)
                 {
                     console.log(inserting);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -1040,7 +1042,7 @@ app.post("/tools-prices", async (req, res) =>
                     !inserting.error.commit && !inserting.error.rollback)
                 {
                     console.log(inserting);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -1146,7 +1148,7 @@ app.post("/office", async (req, res) =>
                     !inserting.error.commit && !inserting.error.rollback)
                 {
                     console.log(inserting);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -1354,7 +1356,7 @@ app.put("/clients", async (req, res) =>
                     !updating.error.commit && !updating.error.rollback)
                 {
                     console.log(updating);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -1363,7 +1365,7 @@ app.put("/clients", async (req, res) =>
                     res.end();
                 }
             }
-            console.table(fieldsValues);
+            console.log(fieldsValues);
         }
         else
         {
@@ -1624,7 +1626,7 @@ app.put("/employees", async (req, res) =>
                     !updating.error.commit && !updating.error.rollback)
                 {
                     console.log(updating);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -1738,7 +1740,7 @@ app.put("/tools-groups", async (req, res) =>
                     !updating.error.commit && !updating.error.rollback)
                 {
                     console.log(updating);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -1835,6 +1837,7 @@ app.put("/tools", async (req, res) =>
                     if (!getResult.error.transaction && !getResult.error.params &&
                         !getResult.error.commit && !getResult.error.rollback)
                     {
+                        console.log(getResult.data);
                         const currentAvailable = getResult.data[0].available;
                         const difference = validQuantity - currentAvailable;
     
@@ -1916,7 +1919,7 @@ app.put("/tools", async (req, res) =>
                     !updating.error.commit && !updating.error.rollback )
                 {   
                     console.log(updating);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
 
                     const whereColumnsManagment = {
                         tool_id : {
@@ -1930,7 +1933,7 @@ app.put("/tools", async (req, res) =>
                         !updatingManagment.error.commit && !updatingManagment.error.rollback)
                     {
                         console.log(updatingManagment);
-                        updateSessionActivity(validSession);
+                        await updateSessionActivity(validSession);
                         res.end();
                     }
                     else
@@ -2036,7 +2039,7 @@ app.put("/unit-measurement", async (req, res) =>
                     !updating.error.commit && !updating.error.rollback)
                 {
                     console.log(updating);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -2229,7 +2232,7 @@ app.put("/tools-prices", async (req, res) =>
                     !updating.error.commit && !updating.error.rollback)
                 {
                     console.log(updating);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -2249,24 +2252,6 @@ app.put("/tools-prices", async (req, res) =>
     {
         console.log("You don't have a valid session!");
         res.end();
-    }
-});
-
-app.put("/tools-managment", async (req, res) =>
-{
-    const cookie = req.cookies.locadoraSession;
-    const toolId = req.body.toolId;
-
-    try
-    {
-        if (req.body.available)
-        {
-
-        }
-    }
-    catch (err)
-    {
-        console.log(err);
     }
 });
 
@@ -2378,7 +2363,7 @@ app.put("/office", async (req, res) =>
                     !updating.error.commit && !updating.error.rollback)
                 {
                     console.log(updating);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -2450,7 +2435,7 @@ app.delete("/clients/:clientId", async (req, res) =>
                     !deleting.error.commit && !deleting.error.rollback)
                 {
                     console.log(deleting);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -2508,6 +2493,7 @@ app.delete("/employees/:employeeId", async (req, res) =>
             {
                 const validEmployeeId = EmployeesTable.Id(employeeId);
                 const selectColumns = ["id", "created_by", "updated_by"];
+                const selectColumnsToolsManagment = ["updated_by", "deleted_by"];
                 const whereParams = {
                     "created_by": {
                         operator: "=",
@@ -2516,24 +2502,42 @@ app.delete("/employees/:employeeId", async (req, res) =>
                     "updated_by": {
                         operator: "=", 
                         value: validEmployeeId
+                    },
+                    "deleted_by": {
+                        operator: "=", 
+                        value: validEmployeeId
+                    },
+                    "inactivated_by": {
+                        operator: "=", 
+                        value: validEmployeeId
                     }
-                }
-                const logicalOperators = ["OR"]
+                };
+                const whereParamsToolsManagment = {
+                    "updated_by": {
+                        operator: "=", 
+                        value: validEmployeeId
+                    },
+                    "deleted_by": {
+                        operator: "=", 
+                        value: validEmployeeId
+                    },
+                };
+                const logicalOperators = ["OR", "OR", "OR"];
+                const logicalOperatorsToolsManagment = ["OR"];
 
                 const usedInClients = await Query.Select("public.clients", selectColumns, whereParams, logicalOperators);
                 const usedInEmployees = await Query.Select("public.employees", selectColumns, whereParams, logicalOperators);
                 const usedInOffice = await Query.Select("public.office", selectColumns, whereParams, logicalOperators);
                 const usedInTools = await Query.Select("public.tools", selectColumns, whereParams, logicalOperators);
                 const usedInToolsGroups = await Query.Select("public.tools_groups", selectColumns, whereParams, logicalOperators);
-                const usedInToolsManagment = await Query.Select("public.tools_managment", selectColumns, whereParams, logicalOperators);
+                const usedInToolsManagment = await Query.Select("public.tools_managment", selectColumnsToolsManagment, whereParamsToolsManagment, logicalOperatorsToolsManagment);
                 const usedInToolsPrices = await Query.Select("public.tools_prices", selectColumns, whereParams, logicalOperators);
                 const usedInUnitMeasurement = await Query.Select("public.unit_measurement", selectColumns, whereParams, logicalOperators);
 
-                // Update (_table, _columnsValues, _returning, _whereColumnsValues, _logicalOperators)
-                if (usedInClients.data.length !== 0 && usedInEmployees.data.length !== 0 &&
-                    usedInOffice.data.length !== 0 && usedInTools.data.length !== 0 &&
-                    usedInToolsGroups.data.length !== 0 && usedInToolsManagment.data.length !== 0 && 
-                    usedInToolsPrices.data.length !== 0 && usedInUnitMeasurement.data.length !== 0) 
+                if (usedInClients.data.length !== 0 || usedInEmployees.data.length !== 0 ||
+                    usedInOffice.data.length !== 0 || usedInTools.data.length !== 0 ||
+                    usedInToolsGroups.data.length !== 0 || usedInToolsManagment.data.length !== 0 || 
+                    usedInToolsPrices.data.length !== 0 || usedInUnitMeasurement.data.length !== 0) 
                 {
                     const updatingColumns = {
                         inactivated_at: "now()",
@@ -2554,7 +2558,35 @@ app.delete("/employees/:employeeId", async (req, res) =>
                         !deleting.error.commit && !deleting.error.rollback)
                     {
                         console.log(deleting);
-                        updateSessionActivity(validSession);
+                        await updateSessionActivity(validSession);
+
+                        if( validSession.data[0].user_id === validEmployeeId )
+                        {
+                            const updatingSessionColumns = {
+                                ended_at: "now()"
+                            };
+                            const returningSessionColumns =  ["*"];
+                            const whereSessionColumns = {
+                                id: {
+                                    operator: "=",
+                                    value: validSession.data[0].id
+                                }
+                            };
+                
+                            const logout = await Query.Update("public.sessions", updatingSessionColumns, returningSessionColumns, whereSessionColumns, [""]);
+                
+                            if ( !logout.error.transaction && !logout.error.params && !logout.error.commit && !logout.error.rollback)
+                            {
+                                console.log("Logged off successful");
+                                res.clearCookie("locadoraSession");
+                                res.end();
+                            }
+                            else
+                            {
+                                console.log("An error occurred while logging of", logout.error);
+                                res.end();
+                            }
+                        }
                         res.end();
                     }
                     else
@@ -2588,9 +2620,9 @@ app.delete("/employees/:employeeId", async (req, res) =>
                             !deleting.error.commit && !deleting.error.rollback)
                         {
                             console.log(deleting);
-                            updateSessionActivity(validSession);
+                            await updateSessionActivity(validSession);
 
-                            if( validSession.data.user_id === validEmployeeId )
+                            if( validSession.data[0].user_id === validEmployeeId )
                             {
                                 const updatingSessionColumns = {
                                     ended_at: "now()"
@@ -2689,7 +2721,7 @@ app.delete("/tools-groups/:groupId", async (req, res) =>
                     }
                 }
 
-                const usedInTools = await Query.Select("public.tools", selectColumns, whereParams);
+                const usedInTools = await Query.Select("public.tools", selectColumns, whereParams, [""]);
 
                 if (usedInTools.data.length !== 0)
                 {
@@ -2711,7 +2743,7 @@ app.delete("/tools-groups/:groupId", async (req, res) =>
                         !deleting.error.commit && !deleting.error.rollback)
                     {
                         console.log(deleting);
-                        updateSessionActivity(validSession);
+                        await updateSessionActivity(validSession);
                         res.end();
                     }
                     else
@@ -2742,7 +2774,7 @@ app.delete("/tools-groups/:groupId", async (req, res) =>
                             !deleting.error.commit && !deleting.error.rollback)
                         {
                             console.log(deleting);
-                            updateSessionActivity(validSession);
+                            await updateSessionActivity(validSession);
                             res.end();
                         }
                         else
@@ -2838,7 +2870,7 @@ app.delete("/tools/:toolId", async (req, res) =>
                         !deleting.error.rollback && !deleting.error.commit)
                     {
                         console.error(deleting)
-                        updateSessionActivity(validSession);
+                        await updateSessionActivity(validSession);
                         const wherePricesColumns = {
                             tool_id: {
                                 operator: "=",
@@ -2851,7 +2883,7 @@ app.delete("/tools/:toolId", async (req, res) =>
                             !deletingPrices.error.commit && !deletingPrices.error.rollback)
                         {
                             console.log(deletingPrices);
-                            updateSessionActivity(validSession);
+                            await updateSessionActivity(validSession);
 
                             const updatingManagmentColumns = {
                                 deleted_at: "now()",
@@ -2871,7 +2903,7 @@ app.delete("/tools/:toolId", async (req, res) =>
                                 !deletingManagment.error.commit && !deletingManagment.error.rollback)
                             {
                                 console.log(deletingManagment);
-                                updateSessionActivity(validSession);
+                                await updateSessionActivity(validSession);
                                 res.end();
                             }
                             else
@@ -2914,8 +2946,8 @@ app.delete("/tools/:toolId", async (req, res) =>
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.rollback && !deleting.error.commit)
                         {
-                            console.table(deleting);
-                            updateSessionActivity(validSession);
+                            console.log(deleting);
+                            await updateSessionActivity(validSession);
                             const updatingManagmentColumns = {
                                 deleted_at: "now()",
                                 deleted_by: validSession.data[0].user_id
@@ -2934,7 +2966,7 @@ app.delete("/tools/:toolId", async (req, res) =>
                                 !deletingManagment.error.commit && !deletingManagment.error.rollback)
                             {
                                 console.log(deletingManagment);
-                                updateSessionActivity(validSession);
+                                await updateSessionActivity(validSession);
                                 res.end();
                             }
                             else
@@ -3013,7 +3045,7 @@ app.delete("/unit-measurement/:unitMeasurementId", async (req, res) =>
                     }
                 }
 
-                const usedInToolsPrices = await Query.Select("public.tools_prices", selectColumns, whereParams);
+                const usedInToolsPrices = await Query.Select("public.tools_prices", selectColumns, whereParams, [""]);
 
                 if (usedInToolsPrices.data.length !== 0)
                 {
@@ -3035,7 +3067,7 @@ app.delete("/unit-measurement/:unitMeasurementId", async (req, res) =>
                         !deleting.error.commit && !deleting.error.rollback)
                     {
                         console.log(deleting);
-                        updateSessionActivity(validSession);
+                        await updateSessionActivity(validSession);
                         res.end();
                     }
                     else
@@ -3066,7 +3098,7 @@ app.delete("/unit-measurement/:unitMeasurementId", async (req, res) =>
                             !deleting.error.commit && !deleting.error.rollback)
                         {
                             console.log(deleting);
-                            updateSessionActivity(validSession);
+                            await updateSessionActivity(validSession);
                             res.end();
                         }
                         else
@@ -3149,7 +3181,7 @@ app.delete("/tools-prices/:toolPricesId", async (req, res) =>
                     !deleting.error.commit && !deleting.error.rollback)
                 {
                     console.log(deleting);
-                    updateSessionActivity(validSession);
+                    await updateSessionActivity(validSession);
                     res.end();
                 }
                 else
@@ -3215,7 +3247,7 @@ app.delete("/office/:officeId", async (req, res) =>
                     }
                 }
 
-                const usedInEmployees = await Query.Select("public.employees", selectColumns, whereParams);
+                const usedInEmployees = await Query.Select("public.employees", selectColumns, whereParams, [""]);
 
                 if (usedInEmployees.data.length !== 0)
                 {
@@ -3237,7 +3269,7 @@ app.delete("/office/:officeId", async (req, res) =>
                         !deleting.error.commit && !deleting.error.rollback)
                     {
                         console.log(deleting);
-                        updateSessionActivity(validSession);
+                        await updateSessionActivity(validSession);
                         res.end();
                     }
                     else
@@ -3268,7 +3300,7 @@ app.delete("/office/:officeId", async (req, res) =>
                             !deleting.error.commit && !deleting.error.rollback)
                         {
                             console.log(deleting);
-                            updateSessionActivity(validSession);
+                            await updateSessionActivity(validSession);
                             res.end();
                         }
                         else
@@ -3704,6 +3736,63 @@ app.get("/office", async (req, res) =>
     }
 });
 
+app.get("/tools-managment", async (req, res) =>
+{
+    const cookie = req.cookies.locadoraSession;
+
+    if (cookie)
+    {
+        const selectColumns = ["id", "user_id"];
+        const selectWhereParams = {
+            "session_token": {
+                operator: "like",
+                value: cookie
+            },
+            "session_type_id": {
+                operator: "=",
+                value: 2
+            },
+            "ended_at": {
+                operator: "is", 
+                value: null
+            }
+        };
+        const selectLogicalOperators = ["AND", "AND"];
+        const validSession = await Query.Select("public.sessions", selectColumns, selectWhereParams, selectLogicalOperators);
+
+        if (validSession.data.length === 1 && !validSession.error.transaction)
+        {
+            const selectGetColumns = ["*"];
+            const selectGetWhereParams = {};
+            const selectGetLogicalOperators = [""];
+            const selectGetOrderBy = ["tool_id"];
+
+            const getResult = await Query.Select("public.tools_managment", selectGetColumns, selectGetWhereParams, selectGetLogicalOperators, selectGetOrderBy);
+            
+            if (!getResult.error.transaction && !validSession.error.params)
+            {
+                console.log(getResult.data);
+                res.end();
+            }
+            else
+            {
+                console.log("Some error occurred", getResult.error);
+                res.end();
+            }
+        }
+        else
+        {
+            console.log("You don't have a valid session!");
+            res.end();
+        }
+    }
+    else
+    {
+        console.log("You don't have a valid session!");
+        res.end();
+    }
+});
+
 app.get("/logoff", async (req, res) =>
 {
     const cookie = req.cookies.locadoraSession;
@@ -3768,12 +3857,31 @@ app.get("/logoff", async (req, res) =>
     } 
 });
 
+app.get("/sessions", async (req, res) =>
+{
+        const selectGetColumns = ["*"];
+        const selectGetWhereParams = {};
+        const selectGetLogicalOperators = [""];
+        const selectGetOrderBy = ["id"];
+        const getResult = await Query.Select("public.sessions", selectGetColumns, selectGetWhereParams, selectGetLogicalOperators, selectGetOrderBy);
+
+        if (!getResult.error.transaction && !getResult.error.params)
+        {
+            console.log(getResult.data);
+            res.end();
+        }
+        else
+        {
+            console.log("Some error occurred", getResult.error);
+            res.end();
+        }
+});
+
 app.listen(port);
 
 async function updateSessionActivity (_validSession)
 {
     const validSession = _validSession;
-    console.log(validSession);
 
     const updatingSessionColumns = {
         last_activity: "now()"

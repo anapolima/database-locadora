@@ -2,17 +2,17 @@
 DELETE http://localhost:8080/clients/9
 
 ###
-DELETE http://localhost:8080/employees/1
+DELETE http://localhost:8080/employees/6
 
 ###
-DELETE http://localhost:8080/tools-groups/1
+DELETE http://localhost:8080/tools-groups/4
 
 ###
-DELETE http://localhost:8080/tools/9
+DELETE http://localhost:8080/tools/18
 ###
-DELETE http://localhost:8080/unit-measurement/1
+DELETE http://localhost:8080/unit-measurement/5
 ###
-DELETE http://localhost:8080/tools-prices/5
+DELETE http://localhost:8080/tools-prices/10
 
 ###
-DELETE http://localhost:8080/office/1
+DELETE http://localhost:8080/office/4
