@@ -49,7 +49,6 @@ app.post("/login/employees", async (req, res) =>
     
     if (result.data.length !== 0 && !result.error.transaction)
     {
-        console.log(result);
         const userData = result.data[0];
         const storedPassword = userData.password;
         const correctedPassword = await bcrypt.compare(password, storedPassword);
@@ -65,7 +64,7 @@ app.post("/login/employees", async (req, res) =>
                 "session_type_id": 2,
                 "last_activity": "now()",
                 "user_id": userData.id,
-                "started_At": "now()"
+                "started_at": "now()"
             }
             const returningColumns = ["*"]
 
@@ -77,7 +76,8 @@ app.post("/login/employees", async (req, res) =>
                 !creatingSessions.error.rollback &&
                 !creatingSessions.error.params)
             {
-                console.log("Logged successful", creatingSessions.data[0]);
+                console.log("Logged successful");
+                console.table(creatingSessions.data[0]);
                 res.cookie("locadoraSession", hashedData);
                 res.end();
             }
@@ -249,7 +249,7 @@ app.post("/clients", async (req, res) =>
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
                 {
-                    console.log(inserting);
+                    console.table(inserting.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -463,7 +463,7 @@ app.post("/employees", async (req, res) =>
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
                 {
-                    console.log(inserting);
+                    console.table(inserting.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -556,7 +556,7 @@ app.post("/tools-groups", async (req, res) =>
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
                 {
-                    console.log(inserting);
+                    console.table(inserting.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -752,7 +752,6 @@ app.post("/tools", async (req, res) =>
                         }
                     }
                 });
-                console.log(fieldsValuesPrices)
             }
 
             if (Object.keys(validationError).length !== 0 && Object.keys(validationErrorPrices).length !== 0)
@@ -769,7 +768,7 @@ app.post("/tools", async (req, res) =>
                 if ( !insertingTool.error.transaction && !insertingTool.error.params &&
                     !insertingTool.error.commits && !insertingTool.error.rollback)
                 {
-                    console.log(insertingTool);
+                    console.table(insertingTool.data);
                     await updateSessionActivity(validSession);
                     const toolId = insertingTool.data[0].id;
 
@@ -785,7 +784,7 @@ app.post("/tools", async (req, res) =>
                             !insertingPrice.error.commit && !insertingPrice.error.rollback)
                         {
                             await updateSessionActivity(validSession);
-                            console.log(insertingPrice);
+                            console.table(insertingPrice.data);
                         }
                         else
                         {
@@ -807,7 +806,7 @@ app.post("/tools", async (req, res) =>
                         !insertingManagment.error.commit && !insertingManagment.error.rollback)
                     {
                         await updateSessionActivity(validSession);
-                        console.log(insertingManagment);
+                        console.table(insertingManagment.data);
                         res.end();
                     }
                     else
@@ -891,7 +890,7 @@ app.post("/unit-measurement", async (req, res) =>
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
                 {
-                    console.log(inserting);
+                    console.table(inserting.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -1041,7 +1040,7 @@ app.post("/tools-prices", async (req, res) =>
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
                 {
-                    console.log(inserting);
+                    console.table(inserting.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -1147,7 +1146,7 @@ app.post("/office", async (req, res) =>
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
                 {
-                    console.log(inserting);
+                    console.table(inserting.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -1355,7 +1354,7 @@ app.put("/clients", async (req, res) =>
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
                 {
-                    console.log(updating);
+                    console.table(updating.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -1625,7 +1624,7 @@ app.put("/employees", async (req, res) =>
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
                 {
-                    console.log(updating);
+                    console.table(updating.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -1739,7 +1738,7 @@ app.put("/tools-groups", async (req, res) =>
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
                 {
-                    console.log(updating);
+                    console.table(updating.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -1837,7 +1836,7 @@ app.put("/tools", async (req, res) =>
                     if (!getResult.error.transaction && !getResult.error.params &&
                         !getResult.error.commit && !getResult.error.rollback)
                     {
-                        console.log(getResult.data);
+                        console.table(getResult.data);
                         const currentAvailable = getResult.data[0].available;
                         const difference = validQuantity - currentAvailable;
     
@@ -1918,7 +1917,7 @@ app.put("/tools", async (req, res) =>
                 if ( !updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback )
                 {   
-                    console.log(updating);
+                    console.table(updating.data);
                     await updateSessionActivity(validSession);
 
                     const whereColumnsManagment = {
@@ -2038,7 +2037,7 @@ app.put("/unit-measurement", async (req, res) =>
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
                 {
-                    console.log(updating);
+                    console.table(updating.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -2231,7 +2230,7 @@ app.put("/tools-prices", async (req, res) =>
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
                 {
-                    console.log(updating);
+                    console.table(updating.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -2362,7 +2361,7 @@ app.put("/office", async (req, res) =>
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
                 {
-                    console.log(updating);
+                    console.table(updating.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -2434,7 +2433,7 @@ app.delete("/clients/:clientId", async (req, res) =>
                 if (!deleting.error.transaction && !deleting.error.params &&
                     !deleting.error.commit && !deleting.error.rollback)
                 {
-                    console.log(deleting);
+                    console.table(deleting.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -2557,7 +2556,7 @@ app.delete("/employees/:employeeId", async (req, res) =>
                     if (!deleting.error.transaction && !deleting.error.params &&
                         !deleting.error.commit && !deleting.error.rollback)
                     {
-                        console.log(deleting);
+                        console.table(deleting.data);
                         await updateSessionActivity(validSession);
 
                         if( validSession.data[0].user_id === validEmployeeId )
@@ -2619,7 +2618,7 @@ app.delete("/employees/:employeeId", async (req, res) =>
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.commit && !deleting.error.rollback)
                         {
-                            console.log(deleting);
+                            console.table(deleting.data);
                             await updateSessionActivity(validSession);
 
                             if( validSession.data[0].user_id === validEmployeeId )
@@ -2742,7 +2741,7 @@ app.delete("/tools-groups/:groupId", async (req, res) =>
                     if (!deleting.error.transaction && !deleting.error.params &&
                         !deleting.error.commit && !deleting.error.rollback)
                     {
-                        console.log(deleting);
+                        console.table(deleting.data);
                         await updateSessionActivity(validSession);
                         res.end();
                     }
@@ -2773,7 +2772,7 @@ app.delete("/tools-groups/:groupId", async (req, res) =>
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.commit && !deleting.error.rollback)
                         {
-                            console.log(deleting);
+                            console.table(deleting.data);
                             await updateSessionActivity(validSession);
                             res.end();
                         }
@@ -2946,7 +2945,7 @@ app.delete("/tools/:toolId", async (req, res) =>
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.rollback && !deleting.error.commit)
                         {
-                            console.log(deleting);
+                            console.table(deleting.data);
                             await updateSessionActivity(validSession);
                             const updatingManagmentColumns = {
                                 deleted_at: "now()",
@@ -3066,7 +3065,7 @@ app.delete("/unit-measurement/:unitMeasurementId", async (req, res) =>
                     if (!deleting.error.transaction && !deleting.error.params &&
                         !deleting.error.commit && !deleting.error.rollback)
                     {
-                        console.log(deleting);
+                        console.table(deleting.data);
                         await updateSessionActivity(validSession);
                         res.end();
                     }
@@ -3097,7 +3096,7 @@ app.delete("/unit-measurement/:unitMeasurementId", async (req, res) =>
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.commit && !deleting.error.rollback)
                         {
-                            console.log(deleting);
+                            console.table(deleting.data);
                             await updateSessionActivity(validSession);
                             res.end();
                         }
@@ -3180,7 +3179,7 @@ app.delete("/tools-prices/:toolPricesId", async (req, res) =>
                 if (!deleting.error.transaction && !deleting.error.params &&
                     !deleting.error.commit && !deleting.error.rollback)
                 {
-                    console.log(deleting);
+                    console.table(deleting.data);
                     await updateSessionActivity(validSession);
                     res.end();
                 }
@@ -3268,7 +3267,7 @@ app.delete("/office/:officeId", async (req, res) =>
                     if (!deleting.error.transaction && !deleting.error.params &&
                         !deleting.error.commit && !deleting.error.rollback)
                     {
-                        console.log(deleting);
+                        console.table(deleting.data);
                         await updateSessionActivity(validSession);
                         res.end();
                     }
@@ -3299,7 +3298,7 @@ app.delete("/office/:officeId", async (req, res) =>
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.commit && !deleting.error.rollback)
                         {
-                            console.log(deleting);
+                            console.table(deleting.data);
                             await updateSessionActivity(validSession);
                             res.end();
                         }
@@ -3372,7 +3371,7 @@ app.get("/clients", async (req, res) =>
             
             if (!getResult.error.transaction && !validSession.error.params)
             {
-                console.log(getResult.data);
+                console.table(getResult.data);
                 res.end();
             }
             else
@@ -3429,7 +3428,7 @@ app.get("/employees", async (req, res) =>
             
             if (!getResult.error.transaction && !validSession.error.params)
             {
-                console.log(getResult.data);
+                console.table(getResult.data);
                 res.end();
             }
             else
@@ -3486,7 +3485,7 @@ app.get("/tools-groups", async (req, res) =>
             
             if (!getResult.error.transaction && !validSession.error.params)
             {
-                console.log(getResult.data);
+                console.table(getResult.data);
                 res.end();
             }
             else
@@ -3543,7 +3542,7 @@ app.get("/tools", async (req, res) =>
             
             if (!getResult.error.transaction && !validSession.error.params)
             {
-                console.log(getResult.data);
+                console.table(getResult.data);
                 res.end();
             }
             else
@@ -3600,7 +3599,7 @@ app.get("/unit-measurement", async (req, res) =>
             
             if (!getResult.error.transaction && !validSession.error.params)
             {
-                console.log(getResult.data);
+                console.table(getResult.data);
                 res.end();
             }
             else
@@ -3657,7 +3656,7 @@ app.get("/tools-prices", async (req, res) =>
             
             if (!getResult.error.transaction && !validSession.error.params)
             {
-                console.log(getResult.data);
+                console.table(getResult.data);
                 res.end();
             }
             else
@@ -3714,7 +3713,7 @@ app.get("/office", async (req, res) =>
             
             if (!getResult.error.transaction && !validSession.error.params)
             {
-                console.log(getResult.data);
+                console.table(getResult.data);
                 res.end();
             }
             else
@@ -3771,7 +3770,7 @@ app.get("/tools-managment", async (req, res) =>
             
             if (!getResult.error.transaction && !validSession.error.params)
             {
-                console.log(getResult.data);
+                console.table(getResult.data);
                 res.end();
             }
             else
@@ -3867,7 +3866,7 @@ app.get("/sessions", async (req, res) =>
 
         if (!getResult.error.transaction && !getResult.error.params)
         {
-            console.log(getResult.data);
+            console.table(getResult.data);
             res.end();
         }
         else
