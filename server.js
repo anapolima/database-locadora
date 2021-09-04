@@ -69,7 +69,7 @@ app.post("/login/employees", async (req, res) =>
             }
             const returningColumns = ["*"]
 
-            const creatingSessions = await Query.Insert("public.sessions", columns, returningColumns);
+            const creatingSessions = await Query.Insert(true, "public.sessions", columns, returningColumns);
 
             if (creatingSessions.data.length !== 0 &&
                 !creatingSessions.error.transaction &&
@@ -244,7 +244,7 @@ app.post("/clients", async (req, res) =>
                 fieldsValues["created_by"] = validSession.data[0].user_id;
                 fieldsValues["created_at"] = "now()";
                 console.log("There are no validation errors, everything is ok");
-                const inserting = await Query.Insert("public.clients", fieldsValues, ["*"]);
+                const inserting = await Query.Insert(true, "public.clients", fieldsValues, ["*"]);
 
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
@@ -458,7 +458,7 @@ app.post("/employees", async (req, res) =>
                 fieldsValues["created_by"] = validSession.data[0].user_id;
                 fieldsValues["created_at"] = "now()";
 
-                const inserting = await Query.Insert("public.employees", fieldsValues, ["*"]);
+                const inserting = await Query.Insert(true, "public.employees", fieldsValues, ["*"]);
 
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
@@ -551,7 +551,7 @@ app.post("/tools-groups", async (req, res) =>
                 fieldsValues["created_by"] = validSession.data[0].user_id;
                 fieldsValues["created_at"] = "now()";
 
-                const inserting = await Query.Insert("public.tools_groups", fieldsValues, ["*"]);
+                const inserting = await Query.Insert(true, "public.tools_groups", fieldsValues, ["*"]);
                 
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
@@ -764,7 +764,7 @@ app.post("/tools", async (req, res) =>
             {
                 fieldsValues["created_by"] = validSession.data[0].user_id;
                 fieldsValues["created_at"] = "now()";
-                const insertingTool = await Query.Insert("public.tools", fieldsValues, ["*"]);
+                const insertingTool = await Query.Insert(true, "public.tools", fieldsValues, ["*"]);
                 
                 if ( !insertingTool.error.transaction && !insertingTool.error.params &&
                     !insertingTool.error.commits && !insertingTool.error.rollback)
@@ -779,7 +779,7 @@ app.post("/tools", async (req, res) =>
                         fieldsValuesPrices["created_by"] = validSession.data[0].user_id;
                         fieldsValuesPrices["created_at"] = "now()";
         
-                        const insertingPrice = await Query.Insert("public.tools_prices", fieldsValuesPrices, ["*"]);
+                        const insertingPrice = await Query.Insert(true, "public.tools_prices", fieldsValuesPrices, ["*"]);
     
                         if (!insertingPrice.error.transaction && !insertingPrice.error.params &&
                             !insertingPrice.error.commit && !insertingPrice.error.rollback)
@@ -801,7 +801,7 @@ app.post("/tools", async (req, res) =>
                     fieldsValuesManagment["updated_at"] = "now()";
                     fieldsValuesManagment["updated_by"] = validSession.data[0].user_id;
 
-                    const insertingManagment = await Query.Insert("public.tools_managment", fieldsValuesManagment, ["*"]);
+                    const insertingManagment = await Query.Insert(true, "public.tools_managment", fieldsValuesManagment, ["*"]);
 
                     if (!insertingManagment.error.transaction && !insertingManagment.error.params &&
                         !insertingManagment.error.commit && !insertingManagment.error.rollback)
@@ -886,7 +886,7 @@ app.post("/unit-measurement", async (req, res) =>
             {
                 fieldsValues["created_by"] = validSession.data[0].user_id;
                 fieldsValues["created_at"] = "now()";
-                const inserting = await Query.Insert("public.unit_measurement", fieldsValues, ["*"]);
+                const inserting = await Query.Insert(true, "public.unit_measurement", fieldsValues, ["*"]);
                 
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
@@ -1036,7 +1036,7 @@ app.post("/tools-prices", async (req, res) =>
             {
                 fieldsValuesPrices["created_by"] = validSession.data[0].user_id;
                 fieldsValuesPrices["created_at"] = "now()";
-                const inserting = await Query.Insert("public.tools_prices", fieldsValuesPrices, ["*"]);
+                const inserting = await Query.Insert(true, "public.tools_prices", fieldsValuesPrices, ["*"]);
                 
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
@@ -1142,7 +1142,7 @@ app.post("/office", async (req, res) =>
             {
                 fieldsValues["created_by"] = validSession.data[0].user_id;
                 fieldsValues["created_at"] = "now()";
-                const inserting = await Query.Insert("public.office", fieldsValues, ["*"]);
+                const inserting = await Query.Insert(true, "public.office", fieldsValues, ["*"]);
                 
                 if (!inserting.error.transaction && !inserting.error.params &&
                     !inserting.error.commit && !inserting.error.rollback)
@@ -1350,7 +1350,7 @@ app.put("/clients", async (req, res) =>
                 fieldsValues["updated_by"] = validSession.data[0].user_id;
                 fieldsValues["updated_at"] = "now();";
 
-                const updating = await Query.Update("public.clients", fieldsValues, ["*"], whereColumns, [""]);
+                const updating = await Query.Update(true, "public.clients", fieldsValues, ["*"], whereColumns, [""]);
                 
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
@@ -1620,7 +1620,7 @@ app.put("/employees", async (req, res) =>
                 fieldsValues["updated_by"] = validSession.data[0].user_id;
                 fieldsValues["updated_at"] = "now();";
 
-                const updating = await Query.Update("public.employees", fieldsValues, ["*"], whereColumns, [""]);
+                const updating = await Query.Update(true, "public.employees", fieldsValues, ["*"], whereColumns, [""]);
                 
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
@@ -1734,7 +1734,7 @@ app.put("/tools-groups", async (req, res) =>
                 fieldsValues["updated_by"] = validSession.data[0].user_id;
                 fieldsValues["updated_at"] = "now();";
 
-                const updating = await Query.Update("public.tools_groups", fieldsValues, ["*"], whereColumns, [""]);
+                const updating = await Query.Update(true, "public.tools_groups", fieldsValues, ["*"], whereColumns, [""]);
                 
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
@@ -1913,7 +1913,7 @@ app.put("/tools", async (req, res) =>
                 fieldsValues["updated_by"] = validSession.data[0].user_id;
                 fieldsValues["updated_at"] = "now();";
 
-                const updating = await Query.Update("public.tools", fieldsValues, ["*"], whereColumns, [""]);
+                const updating = await Query.Update(true, "public.tools", fieldsValues, ["*"], whereColumns, [""]);
                 
                 if ( !updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback )
@@ -1927,7 +1927,7 @@ app.put("/tools", async (req, res) =>
                             value : updating.data[0].id
                         }
                     }
-                    const updatingManagment = await Query.Update("public.tools_managment", fieldsValuesManagment, ["*"], whereColumnsManagment, [""]);
+                    const updatingManagment = await Query.Update(true, "public.tools_managment", fieldsValuesManagment, ["*"], whereColumnsManagment, [""]);
                     
                     if (!updatingManagment.error.transaction && !updatingManagment.error.params &&
                         !updatingManagment.error.commit && !updatingManagment.error.rollback)
@@ -2033,7 +2033,7 @@ app.put("/unit-measurement", async (req, res) =>
                 fieldsValues["updated_by"] = validSession.data[0].user_id;
                 fieldsValues["updated_at"] = "now();";
 
-                const updating = await Query.Update("public.unit_measurement", fieldsValues, ["*"], whereColumns, [""]);
+                const updating = await Query.Update(true, "public.unit_measurement", fieldsValues, ["*"], whereColumns, [""]);
                 
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
@@ -2226,7 +2226,7 @@ app.put("/tools-prices", async (req, res) =>
                 fieldsValues["updated_by"] = validSession.data[0].user_id;
                 fieldsValues["updated_at"] = "now();";
 
-                const updating = await Query.Update("public.tools_prices", fieldsValues, ["*"], whereColumns, [""]);
+                const updating = await Query.Update(true, "public.tools_prices", fieldsValues, ["*"], whereColumns, [""]);
                 
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
@@ -2357,7 +2357,7 @@ app.put("/office", async (req, res) =>
                 fieldsValues["updated_by"] = validSession.data[0].user_id;
                 fieldsValues["updated_at"] = "now();";
 
-                const updating = await Query.Update("public.office", fieldsValues, ["*"], whereColumns, [""]);
+                const updating = await Query.Update(true, "public.office", fieldsValues, ["*"], whereColumns, [""]);
                 
                 if (!updating.error.transaction && !updating.error.params &&
                     !updating.error.commit && !updating.error.rollback)
@@ -2429,7 +2429,7 @@ app.delete("/clients/:clientId", async (req, res) =>
                     }
                 };
 
-                const deleting = await Query.Update("public.clients", updatingColumns, returningColumns, whereColumns, [""]);
+                const deleting = await Query.Update(true, "public.clients", updatingColumns, returningColumns, whereColumns, [""]);
 
                 if (!deleting.error.transaction && !deleting.error.params &&
                     !deleting.error.commit && !deleting.error.rollback)
@@ -2552,7 +2552,7 @@ app.delete("/employees/:employeeId", async (req, res) =>
                     };
 
                     
-                    const deleting = await Query.Update("public.employees", updatingColumns, returningColumns, whereColumns, [""]);
+                    const deleting = await Query.Update(true, "public.employees", updatingColumns, returningColumns, whereColumns, [""]);
                     
                     if (!deleting.error.transaction && !deleting.error.params &&
                         !deleting.error.commit && !deleting.error.rollback)
@@ -2573,7 +2573,7 @@ app.delete("/employees/:employeeId", async (req, res) =>
                                 }
                             };
                 
-                            const logout = await Query.Update("public.sessions", updatingSessionColumns, returningSessionColumns, whereSessionColumns, [""]);
+                            const logout = await Query.Update(true, "public.sessions", updatingSessionColumns, returningSessionColumns, whereSessionColumns, [""]);
                 
                             if ( !logout.error.transaction && !logout.error.params && !logout.error.commit && !logout.error.rollback)
                             {
@@ -2614,7 +2614,7 @@ app.delete("/employees/:employeeId", async (req, res) =>
                             }
                         };
                         
-                        const deleting = await Query.Update("public.employees", updatingColumns, returningColumns, whereColumns, [""]);
+                        const deleting = await Query.Update(true, "public.employees", updatingColumns, returningColumns, whereColumns, [""]);
                         
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.commit && !deleting.error.rollback)
@@ -2635,7 +2635,7 @@ app.delete("/employees/:employeeId", async (req, res) =>
                                     }
                                 };
                     
-                                const logout = await Query.Update("public.sessions", updatingSessionColumns, returningSessionColumns, whereSessionColumns, [""]);
+                                const logout = await Query.Update(true, "public.sessions", updatingSessionColumns, returningSessionColumns, whereSessionColumns, [""]);
                     
                                 if ( !logout.error.transaction && !logout.error.params && !logout.error.commit && !logout.error.rollback)
                                 {
@@ -2737,7 +2737,7 @@ app.delete("/tools-groups/:groupId", async (req, res) =>
                         }
                     };
 
-                    const deleting = await Query.Update("public.tools_groups", updatingColumns, returningColumns, whereColumns, [""]);
+                    const deleting = await Query.Update(true, "public.tools_groups", updatingColumns, returningColumns, whereColumns, [""]);
                     
                     if (!deleting.error.transaction && !deleting.error.params &&
                         !deleting.error.commit && !deleting.error.rollback)
@@ -2768,7 +2768,7 @@ app.delete("/tools-groups/:groupId", async (req, res) =>
                             }
                         };
                         
-                        const deleting = await Query.Update("public.tools_groups", updatingColumns, returningColumns, whereColumns, [""]);
+                        const deleting = await Query.Update(true, "public.tools_groups", updatingColumns, returningColumns, whereColumns, [""]);
                         
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.commit && !deleting.error.rollback)
@@ -2864,7 +2864,7 @@ app.delete("/tools/:toolId", async (req, res) =>
                         }
                     };
 
-                    const deleting = await Query.Update("public.tools", updatingColumns, returningColumns, whereColumns, [""]);
+                    const deleting = await Query.Update(true, "public.tools", updatingColumns, returningColumns, whereColumns, [""]);
 
                     if (!deleting.error.transaction && !deleting.error.params &&
                         !deleting.error.rollback && !deleting.error.commit)
@@ -2877,7 +2877,7 @@ app.delete("/tools/:toolId", async (req, res) =>
                                 value: validToolId
                             }
                         }
-                        const deletingPrices = await Query.Update("public.tools_prices", updatingColumns, returningColumns, wherePricesColumns, [""]);
+                        const deletingPrices = await Query.Update(true, "public.tools_prices", updatingColumns, returningColumns, wherePricesColumns, [""]);
 
                         if (!deletingPrices.error.transaction && !deletingPrices.error.params &&
                             !deletingPrices.error.commit && !deletingPrices.error.rollback)
@@ -2897,7 +2897,7 @@ app.delete("/tools/:toolId", async (req, res) =>
                                 }
                             }
     
-                            const deletingManagment = await Query.Update("public.tools_managment", updatingManagmentColumns, returningManagmentColumns, whereManagmentColumns, [""]);
+                            const deletingManagment = await Query.Update(true, "public.tools_managment", updatingManagmentColumns, returningManagmentColumns, whereManagmentColumns, [""]);
 
                             if (!deletingManagment.error.transaction && !deletingManagment.error.params &&
                                 !deletingManagment.error.commit && !deletingManagment.error.rollback)
@@ -2941,7 +2941,7 @@ app.delete("/tools/:toolId", async (req, res) =>
                             }
                         };
                         
-                        const deleting = await Query.Update("public.tools", updatingColumns, returningColumns, whereColumns, [""]);
+                        const deleting = await Query.Update(true, "public.tools", updatingColumns, returningColumns, whereColumns, [""]);
                         
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.rollback && !deleting.error.commit)
@@ -2960,7 +2960,7 @@ app.delete("/tools/:toolId", async (req, res) =>
                                 }
                             }
     
-                            const deletingManagment = await Query.Update("public.tools_managment", updatingManagmentColumns, returningManagmentColumns, whereManagmentColumns, [""]);
+                            const deletingManagment = await Query.Update(true, "public.tools_managment", updatingManagmentColumns, returningManagmentColumns, whereManagmentColumns, [""]);
 
                             if (!deletingManagment.error.transaction && !deletingManagment.error.params &&
                                 !deletingManagment.error.commit && !deletingManagment.error.rollback)
@@ -3061,7 +3061,7 @@ app.delete("/unit-measurement/:unitMeasurementId", async (req, res) =>
                         }
                     };
 
-                    const deleting = await Query.Update("public.unit_measurement", updatingColumns, returningColumns, whereColumns, [""]);
+                    const deleting = await Query.Update(true, "public.unit_measurement", updatingColumns, returningColumns, whereColumns, [""]);
                     
                     if (!deleting.error.transaction && !deleting.error.params &&
                         !deleting.error.commit && !deleting.error.rollback)
@@ -3092,7 +3092,7 @@ app.delete("/unit-measurement/:unitMeasurementId", async (req, res) =>
                             }
                         };
                         
-                        const deleting = await Query.Update("public.unit_measurement", updatingColumns, returningColumns, whereColumns, [""]);
+                        const deleting = await Query.Update(true, "public.unit_measurement", updatingColumns, returningColumns, whereColumns, [""]);
                         
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.commit && !deleting.error.rollback)
@@ -3175,7 +3175,7 @@ app.delete("/tools-prices/:toolPricesId", async (req, res) =>
                     }
                 };
 
-                const deleting = await Query.Update("public.tools_prices", updatingColumns, returningColumns, whereColumns, [""]);
+                const deleting = await Query.Update(true, "public.tools_prices", updatingColumns, returningColumns, whereColumns, [""]);
                 
                 if (!deleting.error.transaction && !deleting.error.params &&
                     !deleting.error.commit && !deleting.error.rollback)
@@ -3263,7 +3263,7 @@ app.delete("/office/:officeId", async (req, res) =>
                         }
                     };
 
-                    const deleting = await Query.Update("public.office", updatingColumns, returningColumns, whereColumns, [""]);
+                    const deleting = await Query.Update(true, "public.office", updatingColumns, returningColumns, whereColumns, [""]);
                     
                     if (!deleting.error.transaction && !deleting.error.params &&
                         !deleting.error.commit && !deleting.error.rollback)
@@ -3294,7 +3294,7 @@ app.delete("/office/:officeId", async (req, res) =>
                             }
                         };
                         
-                        const deleting = await Query.Update("public.office", updatingColumns, returningColumns, whereColumns, [""]);
+                        const deleting = await Query.Update(true, "public.office", updatingColumns, returningColumns, whereColumns, [""]);
                         
                         if (!deleting.error.transaction && !deleting.error.params &&
                             !deleting.error.commit && !deleting.error.rollback)
@@ -3830,7 +3830,7 @@ app.get("/logoff", async (req, res) =>
                 }
             };
 
-            const logout = await Query.Update("public.sessions", updatingSessionColumns, returningSessionColumns, whereSessionColumns, [""]);
+            const logout = await Query.Update(true, "public.sessions", updatingSessionColumns, returningSessionColumns, whereSessionColumns, [""]);
 
             if ( !logout.error.transaction && !logout.error.params && !logout.error.commit && !logout.error.rollback)
             {
@@ -3894,5 +3894,5 @@ async function updateSessionActivity (_validSession)
         }
     };
 
-    await Query.Update("public.sessions", updatingSessionColumns, returningSessionColumns, whereSessionColumns, [""]);
+    await Query.Update(true, "public.sessions", updatingSessionColumns, returningSessionColumns, whereSessionColumns, [""]);
 }
